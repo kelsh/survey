@@ -28,8 +28,14 @@
         </md-list>
       </md-app-drawer>
 
-      <md-app-content >
-        <component :questions='questions'  @navigateTo="navgiateTo" v-bind:is="currentView" >
+      <md-app-content  class="md-Pmrimary">
+        <component
+            :images="images"
+            :questions='questions'
+            @imagesSelected="imageSelected"
+            @sendAnswers="sendAnswers"
+            @navigateTo="navgiateTo"
+            v-bind:is="currentView" >
         </component>
       </md-app-content>
     </md-app>
@@ -46,7 +52,8 @@ export default {
   data: function(){
     return {
         currentView: 'Home',
-        questions:[{id:123, question:"wakka wakka"}, {id:222, question:"question two"}]
+        questions:[],
+        images:[]
     }
   },
   components:{
@@ -55,14 +62,57 @@ export default {
     'ImageSurvey': ImageSurvey,
   },
   created:function(){
-    this.axios.get('http://localhost:3001/api/survey/questions').then((response) => {
+
+    var localStorage = window.localStorage;
+
+    if(localStorage){
+        var id = localStorage.getItem("id");
+        if(id){
+            this.id = id;
+        }else{
+            var randomNumber = Math.floor(Math.random() * 1000000000);
+            localStorage.setItem("id", randomNumber);
+            this.id = randomNumber
+        }
+    }else{
+        console.warn('oh no you dont have localstorage')
+        this.currentView = 'error';
+    }
+
+    this.axios.defaults.baseURL= 'http://localhost:3001/api';
+    this.axios.defaults.timeout= 2000;
+    this.axios.defaults.headers.common= {'user-id': this.id}
+
+    console.log('id = ', this.id);
+    this.axios.get('/survey/questions').then((response) => {
          this.$set(this, 'questions', response.data);
     });
+
+    this.axios.get('/survey/images/15').then((response) => {
+         this.$set(this, 'images', response.data);
+    });
+
+
   },
   methods:{
-    navgiateTo: function(value){
+    navgiateTo:function(string) {
         console.log('got event');
-        this.$set(this, 'currentView', value)
+        this.$set(this, 'currentView', string)
+    },
+    sendAnswers: function(object)  {
+        console.log('sending survey', object)
+         this.axios.post('/survey/questions', object);
+    },
+    imageSelected: function(object) {
+
+        this.axios.get('/survey/images/3').then((response) => {
+           this.images.push(response.data);
+        });
+
+        console.log('sending images', object);
+        this.axios.post('/survey/images', object);
+
+        this.images.splice(0,3);
     }
   }
 }
