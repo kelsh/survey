@@ -56,7 +56,7 @@ export default {
   },
   created:function(){
     this.axios.get('http://localhost:3001/api/survey/questions').then((response) => {
-         this.$set('questions', response.data);
+         this.$set(this, 'questions', response.data);
     });
   },
   methods:{
