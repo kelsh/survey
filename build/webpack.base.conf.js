@@ -33,10 +33,6 @@ module.exports = {
   module: {
     rules: [
       {
-      test: require.resolve('uikit'),
-      loader: 'expose-loader?UIkit'
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig

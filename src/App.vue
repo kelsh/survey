@@ -1,29 +1,69 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld/>
+  <div id="app" class="page-container">
+
+   <md-app>
+      <md-app-toolbar class="md-primary">
+        <span class="md-title">OfficeBlankets.com Survey</span>
+      </md-app-toolbar>
+
+      <md-app-drawer md-permanent="clipped">
+
+        <md-list>
+
+        <md-list-item @click="currentView = 'Home'">
+            <md-icon>send</md-icon>
+            <span class="md-list-item-text">Home</span>
+          </md-list-item>
+
+          <md-list-item @click="currentView = 'Questionaire'">
+            <md-icon>send</md-icon>
+            <span class="md-list-item-text">Questionaire</span>
+          </md-list-item>
+
+          <md-list-item @click="currentView = 'ImageSurvey' ">
+            <md-icon>send</md-icon>
+            <span class="md-list-item-text">Image Survey</span>
+          </md-list-item>
+
+        </md-list>
+      </md-app-drawer>
+
+      <md-app-content>
+        <component v-bind:is="currentView">
+        </component>
+      </md-app-content>
+    </md-app>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import Home from './components/Home';
+import Questionaire from './components/Questionaire';
+import ImageSurvey from './components/ImageSurvey';
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  data: function(){
+    return {
+        currentView: 'Home'
+    }
+  },
+  components:{
+    'Home':Home,
+    'Questionaire':Questionaire,
+    'ImageSurvey': ImageSurvey
   }
 }
-console.log( UIkit );
+
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.md-app {
+    min-height: 100vh;
+  }
+
+.md-drawer {
+    width: 200px;
+    max-width: calc(100vw - 125px);
 }
 </style>
