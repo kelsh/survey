@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="page-container">
+  <div id="app" class="page-container" >
 
    <md-app>
       <md-app-toolbar class="md-primary">
@@ -28,8 +28,8 @@
         </md-list>
       </md-app-drawer>
 
-      <md-app-content>
-        <component v-bind:is="currentView">
+      <md-app-content >
+        <component :questions='questions'  @navigateTo="navgiateTo" v-bind:is="currentView" >
         </component>
       </md-app-content>
     </md-app>
@@ -45,13 +45,23 @@ export default {
   name: 'app',
   data: function(){
     return {
-        currentView: 'Home'
+        currentView: 'Home',
+        questions:[{id:123, question:"wakka wakka"}, {id:222, question:"question two"}]
     }
   },
   components:{
     'Home':Home,
     'Questionaire':Questionaire,
-    'ImageSurvey': ImageSurvey
+    'ImageSurvey': ImageSurvey,
+  },
+  created:function(){
+    //this.$set('questions', JSON.parse(this.$get('/api/survey/questions') ) );
+  },
+  methods:{
+    navgiateTo: function(value){
+        console.log('got event');
+        this.$set(this, 'currentView', value)
+    }
   }
 }
 
