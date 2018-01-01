@@ -55,7 +55,9 @@ export default {
     'ImageSurvey': ImageSurvey,
   },
   created:function(){
-    //this.$set('questions', JSON.parse(this.$get('/api/survey/questions') ) );
+    this.axios.get('http://localhost:3001/api/survey/questions').then((response) => {
+         this.$set('questions', response.data);
+    });
   },
   methods:{
     navgiateTo: function(value){
