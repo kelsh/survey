@@ -12,7 +12,7 @@
 		      </md-card-header>
 
 		      <md-card-content>
-		       	id:{{questions[page].id}}
+		       	id:{{questions[page]._id}}
 		       	<br />
 		       	question: {{questions[page].question}}
 
@@ -67,7 +67,8 @@ export default {
   		}
   	},
   	send:function(){
-  		this.$emit('sendAnswers', this.questions.map( (question) => {return {id:question.id, answer:question.answer} }  ) )
+  		console.log('emitting answers');
+  		this.$emit('sendAnswers', this.questions.map( (question) => {return {id:question._id, answer:question.answer} }  ) )
   	},
   	answer:function(page){
   	}
