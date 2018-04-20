@@ -1,6 +1,6 @@
 # survey
 
-> A Vue.js project
+> office blankets .com survey
 
 ## Build Setup
 
