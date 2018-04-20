@@ -84,11 +84,11 @@ export default {
     this.axios.defaults.headers.common= {'user-id': this.id}
 
     console.log('id = ', this.id);
-    this.axios.get('/survey/questions').then((response) => {
+    this.axios.get('http://officeblankets.com/api/survey/questions').then((response) => {
          this.$set(this, 'questions', response.data);
     });
 
-    this.axios.get('/survey/images/').then((response) => {
+    this.axios.get('//officeblankets.com/api/survey/images/').then((response) => {
 
          this.$set(this, 'images', response.data);
          this.shuffleImages();
@@ -98,18 +98,15 @@ export default {
   },
   methods:{
     navgiateTo:function(string) {
-        console.log('got event');
         this.$set(this, 'currentView', string)
     },
     sendAnswers: function(object)  {
-        console.log('sending survey', object)
-         this.axios.post('/survey/questions', object);
+         this.axios.post('//officeblankets.com/api/survey/questions', object);
     },
     imageSelected: function(object) {
 
-        console.log('sending images', object);
-        this.axios.post('/survey/images', object);
-        console.log('aaaa', this.images);
+        this.axios.post('//officeblankets.com/api/survey/images', object);
+
         let removeIds = object.images.map(function(item){return item._id});
         let removeImages = this.images.filter(function(image){
             return removeIds.indexOf(image._id) === -1;
@@ -120,10 +117,14 @@ export default {
 
     },
     shuffleImages: function() {
+
         let array = this.images;
+        console.log(array);
         for (let i = array.length - 1; i > 0; i--) {
+
             let j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
+
         }
 
         this.$set(this, 'images', array);
