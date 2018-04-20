@@ -1,6 +1,7 @@
 <template>
   <div class="">
 
+  	<div v-if="!done">
   	<md-toolbar :md-elevation="0">
         <span class="md-title">Questionaire</span>
     </md-toolbar>
@@ -31,6 +32,12 @@
 		          <md-button v-if="lastPage" class="md-dense md-primary" @click="send">Send</md-button>
 		      </md-card-actions>
 		    </md-card>
+		</div>
+		<div v-if="done">
+			<md-toolbar :md-elevation="0">
+		        <span class="md-title">Thanks! your answers were sent</span>
+		    </md-toolbar>
+		</div>
   </div>
 </template>
 
@@ -43,7 +50,8 @@ export default {
       page:0,
       lastPage:false,
       sent: false,
-      answers:[]
+      answers:[],
+      done:false
     }
   },
   watch:{
@@ -67,8 +75,10 @@ export default {
   		}
   	},
   	send:function(){
+
   		console.log('emitting answers');
   		this.$emit('sendAnswers', this.questions.map( (question) => {return {id:question._id, answer:question.answer} }  ) )
+  		this.$set(this, "done", true);
   	},
   	answer:function(page){
   	}

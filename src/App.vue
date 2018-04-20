@@ -79,8 +79,8 @@ export default {
         this.currentView = 'error';
     }
 
-    this.axios.defaults.baseURL= 'http://localhost:3001/api';
-    this.axios.defaults.timeout= 2000;
+    this.axios.defaults.baseURL= '/api';
+    this.axios.defaults.timeout= 200000;
     this.axios.defaults.headers.common= {'user-id': this.id}
 
     console.log('id = ', this.id);
@@ -88,8 +88,10 @@ export default {
          this.$set(this, 'questions', response.data);
     });
 
-    this.axios.get('/survey/images/15').then((response) => {
+    this.axios.get('/survey/images/').then((response) => {
+
          this.$set(this, 'images', response.data);
+         this.shuffleImages();
     });
 
 
@@ -105,14 +107,26 @@ export default {
     },
     imageSelected: function(object) {
 
-        this.axios.get('/survey/images/3').then((response) => {
-           this.images.push(response.data);
-        });
-
         console.log('sending images', object);
         this.axios.post('/survey/images', object);
+        console.log('aaaa', this.images);
+        let removeIds = object.images.map(function(item){return item._id});
+        let removeImages = this.images.filter(function(image){
+            return removeIds.indexOf(image._id) === -1;
+        })
 
-        this.images.splice(0,3);
+        console.log(removeImages);
+        this.$set(this, "images", removeImages);
+
+    },
+    shuffleImages: function() {
+        let array = this.images;
+        for (let i = array.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+
+        this.$set(this, 'images', array);
     }
   }
 }
