@@ -23,7 +23,7 @@ module.exports = {
         config.dev.assetsPublicPath
     },
     resolve: {
-      extensions: ['.js', '.min.js', '.vue', '.json'],
+      extensions: ['.js', '.min.js', '.vue', '.json','.scss','.css'],
       alias: {
         'vue$': 'vue/dist/vue.esm.js',
         'vue-material-home': 'vue-material/dist/',
