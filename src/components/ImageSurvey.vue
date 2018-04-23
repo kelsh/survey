@@ -1,9 +1,6 @@
 <template>
   <div class="">
 
-  	<md-toolbar :md-elevation="0">
-        <span class="md-title">Image Survey</span>
-    </md-toolbar>
     <md-subheader>Click on the image you like best.</md-subheader>
 
     <div class="md-layout md-gutter md-alignment-left-center" >
@@ -25,7 +22,6 @@ export default {
   },
   methods:{
   	selectImage:function(index){
-  		console.log('emit image selected' )
   		this.$emit('imagesSelected', {images: this.images.slice(0,3), selectedImage: this.images[index]})
   	}
   }

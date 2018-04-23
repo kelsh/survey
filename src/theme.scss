@@ -1,0 +1,40 @@
+@import "../node_modules/vue-material/dist/theme/engine.scss";
+
+@font-face {
+    font-family: 'gotham';
+    src: url('./assets/fonts/Gotham-Medium.woff') format('woff'), /* Super Modern Browsers */
+        url('./assets/fonts/Gotham-Medium.ttf') format('truetype'), /* Pretty Modern Browsers */
+}
+@include md-register-theme("myTheme", (
+
+	primary:rgba(194, 221, 250, .7),
+	accent: #F5E7E6,
+
+	toolbarvariant:#ffffff,
+	cardbackground:rgba(220, 216, 205,.6),
+	background: #ffffff,
+	background-variant: #EAEBEF,
+
+	text-primary: rgba(#000, .87),
+	text-accent: rgba(#000, .54),
+	text-hint: rgba(#000, .38),
+	disabled: rgba(#000, .26),
+	disabled-background: rgba(#000, .12),
+	highlight: rgba(#000, .12),
+	icon: rgba(#000, .54),
+	icon-disabled: rgba(#000, .38),
+	divider: rgba(#000, .12),
+	scrollbar: #757575,
+	scrollbar-background: darken(#eee, 5%),
+	tooltip: #616161,
+
+));
+
+@import "../node_modules/vue-material/dist/theme/all.scss";
+
+.md-card.md-theme-myTheme {
+    background-color: #fff;
+    background-color: var(--md-theme-myTheme-cardbackground, #fff);
+    color: rgba(0, 0, 0, 0.87);
+    color: var(--md-theme-myTheme-text-primary-on-background, rgba(0, 0, 0, 0.87));
+}

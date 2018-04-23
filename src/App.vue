@@ -1,48 +1,43 @@
 <template>
-  <div id="app" class="page-container" >
+    <div id="app" class="page-container" >
 
-   <md-app>
-      <md-app-toolbar class="md-primary">
-        <span class="md-title">OfficeBlankets.com Survey</span>
-      </md-app-toolbar>
+    <md-app>
+        <md-app-toolbar class="brand" :class='{"on-blur":messageOpened,"off-blur":!messageOpened}'>
+            <div class="logo">OfficeBlankets.Com</div>
+        </md-app-toolbar>
 
-      <md-app-drawer md-permanent="clipped">
+        <md-app-content  class="md-Pmrimary" >
 
-        <md-list>
+            <Home
+                v-if="messageOpened"
+                :visits="visits"
+                @closeModal="closeModal"
+            >
 
-        <md-list-item @click="currentView = 'Home'">
-            <md-icon>send</md-icon>
-            <span class="md-list-item-text">Home</span>
-          </md-list-item>
+            </Home>
 
-          <md-list-item @click="currentView = 'Questionaire'">
-            <md-icon>send</md-icon>
-            <span class="md-list-item-text">Questionaire</span>
-          </md-list-item>
+            <div :class='{"on-blur":messageOpened,"off-blur":!messageOpened}'>
+                <Questionaire
+                @sendAnswers="sendAnswers"
+                :questions='questions'
+                >
 
-          <md-list-item @click="currentView = 'ImageSurvey' ">
-            <md-icon>send</md-icon>
-            <span class="md-list-item-text">Image Survey</span>
-          </md-list-item>
+                </Questionaire>
 
-        </md-list>
-      </md-app-drawer>
-
-      <md-app-content  class="md-Pmrimary">
-        <component
-            :images="images"
-            :questions='questions'
-            @imagesSelected="imageSelected"
-            @sendAnswers="sendAnswers"
-            @navigateTo="navgiateTo"
-            v-bind:is="currentView" >
-        </component>
-      </md-app-content>
+                <ImageSurvey
+                :images="images"
+                :questions='questions'
+                @imagesSelected="imageSelected"
+                >
+                </ImageSurvey>
+            </div>
+        </md-app-content>
     </md-app>
-  </div>
+</div>
 </template>
 
 <script>
+
 import Home from './components/Home';
 import Questionaire from './components/Questionaire';
 import ImageSurvey from './components/ImageSurvey';
@@ -51,9 +46,9 @@ export default {
   name: 'app',
   data: function(){
     return {
-        currentView: 'Home',
         questions:[],
-        images:[]
+        images:[],
+        messageOpened:true
     }
   },
   components:{
@@ -63,9 +58,13 @@ export default {
   },
   created:function(){
 
+    this.$material.theming.theme = 'myTheme'
+
     var localStorage = window.localStorage;
 
     if(localStorage){
+
+        //get id or assign one
         var id = localStorage.getItem("id");
         if(id){
             this.id = id;
@@ -74,7 +73,23 @@ export default {
             localStorage.setItem("id", randomNumber);
             this.id = randomNumber
         }
-    }else{
+
+        //get number of visits
+        var visits = parseInt(localStorage.getItem("visits"));
+        if(visits){
+
+            this.visits = visits++;
+            localStorage.setItem("visits", this.visits);
+        }
+
+        else{
+
+            this.visits = 1;
+            localStorage.setItem("visits", 1);
+        }
+    }
+
+    else{
         console.warn('oh no you dont have localstorage')
         this.currentView = 'error';
     }
@@ -82,6 +97,10 @@ export default {
     this.axios.defaults.baseURL= '/api';
     this.axios.defaults.timeout= 200000;
     this.axios.defaults.headers.common= {'user-id': this.id}
+
+    if(this.visits){
+        this.messageOpened = true;
+    }
 
     console.log('id = ', this.id);
     this.axios.get('http://officeblankets.com/api/survey/questions').then((response) => {
@@ -97,6 +116,9 @@ export default {
 
   },
   methods:{
+    closeModal:function(){
+        this.messageOpened = false;
+    },
     navgiateTo:function(string) {
         this.$set(this, 'currentView', string)
     },
@@ -134,13 +156,62 @@ export default {
 
 </script>
 
-<style>
+<style lang='scss'>
+
+@import './theme.scss';
+
+.md-card .md-title{
+    font-family:'gotham';
+    font-weight: 400;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    line-height: 15px;
+    color: #000;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 10px 0;
+}
+body,html{
+    font-family: 'Raleway', sans-serif;
+}
+body,html,.page-container, .md-theme-default{
+    background-color:#EAEBEF;
+}
+.md-app-toolbar{
+    min-height:60px;
+    box-shadow: 0px 0px;
+}
+
+.md-app-toolbar.brand{
+     background-color: transparent;
+}
+
+.brand{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+}
+.logo{
+    font-size:2em;
+    font-family: 'Sacramento', cursive;
+}
 .md-app {
+
     min-height: 100vh;
   }
 
 .md-drawer {
     width: 200px;
     max-width: calc(100vw - 125px);
+}
+
+.on-blur{
+    transition: filter .2s;
+    filter: blur(20px);
+}
+.off-blur{
+     transition: filter .2s;
+     filter: blur(0px);
 }
 </style>
